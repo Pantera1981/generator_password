@@ -1,0 +1,55 @@
+#генератор паролей
+import random
+import string
+import re
+
+uppercase = list(string.ascii_uppercase)
+lowercase = list(string.ascii_lowercase)
+numbers = list(string.digits)
+symbols = ("!","@","#","$","%","^","&","*")
+password = []
+
+def generatePassword(passwordLength, useUppercase, useLowercase, useNumbers, useSymbols):
+    charsToUse = []
+    
+    if useUppercase == True:
+        charsToUse.extend(uppercase)
+    if useLowercase == True:
+        charsToUse.extend(lowercase)
+    if useNumbers == True:
+        charsToUse.extend(numbers)
+    if useSymbols == True:
+        charsToUse.extend(symbols)
+    while int(passwordLength) > len(password):
+        password.append(random.choice(charsToUse))
+        random.shuffle(password)
+    return password
+
+def getPassword():               
+    while True:
+        try:
+            passwordLength = int(input('Длина пароля?: '))
+            if passwordLength > 0:break
+            print("Число символов может быть только целым и положительным")      
+        except ValueError:
+            print("Число символов может быть только целым и положительным")
+    useUppercase = input('Использовать заглавные буквы?  (y/n): ').lower().strip() == 'y'
+    useLowercase = input('Использовать строчные символы?  (y/n): ').lower().strip() == 'y'
+    useNumbers = input('Использовать цифры?  (y/n): ').lower().strip() == 'y'
+    useSymbols = input('Использовать спецсимволы? (y/n): ').lower().strip() == 'y'
+    return generatePassword(passwordLength, useUppercase, useLowercase, useNumbers, useSymbols)
+
+password = getPassword()
+print(''.join(password))
+
+def validatePassword(password):
+    if len(password) <= 8 or re.search('[0-9]',password) is None or re.search('[A-Z]',password) is None or re.search('[a-z]',password) is None or re.search("!","@","#","$","%","^","&","*",password) is None:
+        print ("Пароль не безопасен. Надежный  пароль должен содержать минимум 8 символов, строчные и заглавные буквы, цифры и спецсимволы")
+        return False
+    return True
+while not validatePassword(password): 
+    password = getPassword()
+    print(''.join(password))       
+   
+   # with open ('C:\Temp\passwords.txt','a',encoding='utf-8') as f:
+    #    f.write(password)
