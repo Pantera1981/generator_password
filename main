@@ -1,5 +1,4 @@
-#генератор паролей
-import random
+#import random
 import string
 import re
 
@@ -7,9 +6,9 @@ uppercase = list(string.ascii_uppercase)
 lowercase = list(string.ascii_lowercase)
 numbers = list(string.digits)
 symbols = ("!","@","#","$","%","^","&","*")
-password = []
 
 def generatePassword(passwordLength, useUppercase, useLowercase, useNumbers, useSymbols):
+    password = []
     charsToUse = []
     
     if useUppercase == True:
@@ -39,17 +38,18 @@ def getPassword():
     useSymbols = input('Использовать спецсимволы? (y/n): ').lower().strip() == 'y'
     return generatePassword(passwordLength, useUppercase, useLowercase, useNumbers, useSymbols)
 
-password = getPassword()
-print(''.join(password))
-
 def validatePassword(password):
-    if len(password) <= 8 or re.search('[0-9]',password) is None or re.search('[A-Z]',password) is None or re.search('[a-z]',password) is None or re.search("!","@","#","$","%","^","&","*",password) is None:
+    if len(password) <= 8 or re.search('[0-9]',password) is None or re.search('[A-Z]',password) is None or re.search('[a-z]',password) is None or not any(symbol in password for symbol in symbols):
         print ("Пароль не безопасен. Надежный  пароль должен содержать минимум 8 символов, строчные и заглавные буквы, цифры и спецсимволы")
         return False
     return True
-while not validatePassword(password): 
-    password = getPassword()
-    print(''.join(password))       
+
+while True:
+    password = ''.join(getPassword())
+    print(password)       
+    if validatePassword(password):
+        print ("Пароль надёжный")
+        break
    
    # with open ('C:\Temp\passwords.txt','a',encoding='utf-8') as f:
     #    f.write(password)
